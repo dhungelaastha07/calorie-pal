@@ -1,0 +1,26 @@
+.nav-parent-container{
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 40px;
+    background-color: #F79256; 
+}
+
+.menu-options{
+    display: flex;
+}
+
+.nav-title{
+    font-family: 'Lobster', cursive;
+    font-size: 20px;
+}
+
+.nav-option{
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav-option:first-child{
+    margin-right: 30px;
+}
