@@ -1,94 +1,114 @@
 import { Component } from "react";
+import FormContainer from "./FormContainer.js";
+import axios from "axios";
 
 class SignUp extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      firstNameInput: "",
-      lastNameInput: "",
-      emailInput: "",
-      passwordInput: "",
+      formFields: [
+        {
+          name: "firstName",
+          label: "First Name",
+          type: "text",
+          errorMsg: "Please fix the error",
+          hasError: false,
+          placeholder: "enter your first name",
+          value: "",
+        },
+        {
+          name: "lastName",
+          label: "Last Name",
+          type: "text",
+          errorMsg: "Please fix the error",
+          hasError: false,
+          placeholder: "enter your last name",
+          value: "",
+        },
+        {
+          name: "email",
+          label: "Email",
+          type: "email",
+          errorMsg: "Please fix the error",
+          existErrorMsg: "",
+          hasError: false,
+          placeholder: "enter your email",
+          value: "",
+        },
+        {
+          name: "password",
+          label: "Password",
+          type: "password",
+          errorMsg: "Please fix the error",
+          hasError: false,
+          placeholder: "enter your password",
+          value: "",
+        },
+      ],
     };
 
-    this.userInputHandler = this.userInputHandler.bind(this);
     this.submitHandler = this.submitHandler.bind(this);
+    this.formStateModifier = this.formStateModifier.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
-  userInputHandler(e, stateName) {
-    this.setState({
-      [stateName]: e.target.value,
+  formStateModifier(name, update) {
+    const foundIndex = this.state.formFields.findIndex((item) => {
+      return item.name === name;
+    });
+
+    if (foundIndex >= 0) {
+      this.setState((state) => {
+        const formFieldsCopy = [...state.formFields];
+        formFieldsCopy[foundIndex] = {
+          ...formFieldsCopy[foundIndex],
+          ...update,
+        };
+        return {
+          formFields: formFieldsCopy,
+        };
+      });
+    }
+  }
+
+  resetForm() {
+    this.state.formFields.forEach((item) => {
+      this.formStateModifier(item.name, { value: "" });
     });
   }
 
-  submitHandler(e) {
-    e.preventDefault();
-    console.log("here");
+  submitHandler(formData) {
+    axios
+      .post("http://127.0.0.1:8080/create-user", formData)
+      .then((res) => {
+        this.resetForm();
+        this.props.updateFormDisplay("signin");
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+        if (err.response && err.response.data.message === "EXISTING_USER") {
+          this.formStateModifier("email", {
+            existErrorMsg: "Account already exist for the email",
+          });
+        } else {
+          console.log(err);
+          this.formStateModifier("email", {
+            existErrorMsg: "",
+          });
+        }
+      });
   }
 
   render() {
     return (
-      <div className="form-parent-container">
-        <form onSubmit={this.submitHandler} className="form-container">
-          <h2 className="form-title"> Sign Up </h2>
-          <label className="form-label" htmlFor="first-name">
-            {" "}
-            First Name{" "}
-          </label>
-          <input
-            className="user-input-box"
-            type="text"
-            placeholder="enter your first name"
-            value={this.state.firstNameInput}
-            onChange={(e) => {
-              this.userInputHandler(e, "firstNameInput");
-            }}
-          />
-          <label className="form-label" htmlFor="last-name">
-            {" "}
-            Last Name{" "}
-          </label>
-          <input
-            className="user-input-box"
-            type="text"
-            placeholder="enter your last name"
-            value={this.state.lastNameInput}
-            onChange={(e) => {
-              this.userInputHandler(e, "lastNameInput");
-            }}
-          />
-          <label className="form-label" htmlFor="email">
-            {" "}
-            Email{" "}
-          </label>
-          <input
-            className="user-input-box"
-            type="email"
-            placeholder="enter your email"
-            value={this.state.emailInput}
-            onChange={(e) => {
-              this.userInputHandler(e, "emailInput");
-            }}
-          />
-          <label className="form-label" htmlFor="password">
-            {" "}
-            Password{" "}
-          </label>
-          <input
-            className="user-input-box"
-            type="password"
-            placeholder="enter your password"
-            value={this.state.passwordInput}
-            onChange={(e) => {
-              this.userInputHandler(e, "passwordInput");
-            }}
-          />
-          <button type="submit" className="form-btn">
-            {" "}
-            Sign Up{" "}
-          </button>
-        </form>
-      </div>
+      <FormContainer
+        formFields={this.state.formFields}
+        title="Sign Up"
+        buttonText="Sign Up"
+        formStateModifier={this.formStateModifier}
+        submitHandler={this.submitHandler}
+      />
     );
   }
 }
