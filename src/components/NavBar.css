@@ -2,6 +2,7 @@
     width: 100vw;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px 40px;
     background-color: #F79256; 
 }
@@ -12,10 +13,21 @@
 
 .nav-title{
     font-family: 'Lobster', cursive;
-    font-size: 20px;
+    font-size: 30px;
+    text-decoration: none;
+    color: black;
+
+}
+
+.sign-in-up{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 400px;
 }
 
 .nav-option{
+
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
@@ -23,4 +35,9 @@
 
 .nav-option:first-child{
     margin-right: 30px;
+}
+
+.set-goal{
+    text-decoration: none;
+    color: black;
 }
