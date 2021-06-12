@@ -19,7 +19,7 @@ class CalorieForm extends Component {
         {
           name: "calorie",
           label: "Calorie",
-          type: "text",
+          type: "number",
           errorMessage: "Please fix the error",
           hasError: false,
           placeholder: "enter your calorie intake",
@@ -40,7 +40,14 @@ class CalorieForm extends Component {
   }
 
   submitHandler(formData) {
-    console.log(formData);
+    axios
+      .post("http://127.0.0.1:8080/add-cal", formData)
+      .then((res) => {
+        this.props.updateCalorieActivity(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     this.resetForm();
   }
   formStateModifier(name, update) {
