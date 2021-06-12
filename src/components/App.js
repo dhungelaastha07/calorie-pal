@@ -11,13 +11,29 @@ class App extends Component {
     super(props);
     this.state = {
       loggedInUser: null,
+      userGoal: null,
+      calorieActivity: [],
     };
     this.updateLoggedInUser = this.updateLoggedInUser.bind(this);
+    this.updateUserGoal = this.updateUserGoal.bind(this);
+    this.updateCalorieActivity = this.updateCalorieActivity.bind(this);
   }
 
   updateLoggedInUser(userData) {
     this.setState({
       loggedInUser: userData,
+    });
+  }
+
+  updateUserGoal(goal) {
+    this.setState({
+      userGoal: goal,
+    });
+  }
+
+  updateCalorieActivity(activity) {
+    this.setState({
+      calorieActivity: activity,
     });
   }
 
@@ -32,8 +48,8 @@ class App extends Component {
     const token = localStorage.getItem("token");
     if (token) {
       axios.post("http://127.0.0.1:8080/check-token", { token }).then((res) => {
-        this.updateLoggedInUser(res.data);
         this.setAxiosAuthorization(token);
+        this.updateLoggedInUser(res.data);
       });
     }
   }
@@ -48,7 +64,9 @@ class App extends Component {
               <GoalForm
                 {...props}
                 loggedInUser={this.state.loggedInUser}
+                userGoal={this.state.userGoal}
                 updateLoggedInUser={this.updateLoggedInUser}
+                updateUserGoal={this.updateUserGoal}
               />
             )}
           />
@@ -58,7 +76,11 @@ class App extends Component {
               <Dashboard
                 {...props}
                 loggedInUser={this.state.loggedInUser}
+                userGoal={this.state.userGoal}
+                calorieActivity={this.state.calorieActivity}
                 updateLoggedInUser={this.updateLoggedInUser}
+                updateUserGoal={this.updateUserGoal}
+                updateCalorieActivity={this.updateCalorieActivity}
               />
             )}
           />

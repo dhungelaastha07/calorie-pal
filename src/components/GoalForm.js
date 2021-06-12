@@ -77,6 +77,14 @@ class GoalForm extends Component {
       console.log("here");
       this.props.history.push("/");
     }
+
+    if (this.props.userGoal) {
+      this.state.formFields.forEach((item, index) => {
+        this.formStateModifier(item.name, {
+          value: this.props.userGoal[item.name],
+        });
+      });
+    }
   }
 
   resetForm() {
@@ -89,16 +97,15 @@ class GoalForm extends Component {
     axios
       .post("http://127.0.0.1:8080/set-goal", formData)
       .then((res) => {
-        this.props.updateLoggedInUser({
-          ...this.props.loggedInUser,
-          goal: res.data,
-        });
+        this.props.updateUserGoal(res.data);
+        this.props.history.push("/dashboard");
       })
       .catch((err) => {
         console.log(err);
       });
     this.resetForm();
   }
+  
   formStateModifier(name, update) {
     const foundIndex = this.state.formFields.findIndex((item) => {
       return item.name === name;
