@@ -5,6 +5,7 @@ import NavBar from "./NavBar";
 import axios from "axios";
 import CalorieForm from "./CalorieForm.js";
 import Summary from "./Summary";
+import ListActivity from "./ListActivity.js";
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -59,22 +60,18 @@ class Dashboard extends Component {
           updateLoggedInUser={this.props.updateLoggedInUser}
         />
         <div className="dashboard-content">
-          <Summary calorieActivity={this.props.calorieActivity} />
-          <div className="form-col">
+          <Summary
+            calorieActivity={this.props.calorieActivity}
+            userGoal={this.props.userGoal}
+          />
+          <div>
             <CalorieForm
               updateCalorieActivity={this.props.updateCalorieActivity}
             />
           </div>
-          {/* <h1 className="dashboard-title">
-            {" "}
-            Are you here to witness the fitness?{" "}
-          </h1>{" "}
-          <p className="dashboard-description">
-            {" "}
-            Be gentle. You’ve been at war with your body for so long. Peace
-            takes time. Step up your diet routine with us!
-          </p> */}
         </div>
+
+        <ListActivity calorieActivity={this.props.calorieActivity} />
       </div>
     );
   }
